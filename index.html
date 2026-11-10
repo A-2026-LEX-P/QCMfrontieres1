@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Réviser les frontières — QCM 1</title>
+
+  <style>
+    :root {
+      --bleu: #244a73;
+      --bleu-clair: #eaf3fc;
+      --vert: #218347;
+      --vert-clair: #eaf7ef;
+      --orange: #b45309;
+      --orange-clair: #fff3e3;
+      --gris: #f4f6f9;
+      --texte: #243247;
+      --bordure: #d9e0e8;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.65;
+      color: var(--texte);
+      background: #f5f7fa;
+    }
+
+    header {
+      padding: 35px 20px;
+      color: white;
+      background: var(--bleu);
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0 0 10px;
+      font-size: clamp(1.7rem, 4vw, 2.5rem);
+    }
+
+    header p {
+      max-width: 720px;
+      margin: 8px auto;
+    }
+
+    .conteneur {
+      width: min(100% - 30px, 900px);
+      margin: 25px auto;
+    }
+
+    .navigation {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 22px;
+    }
+
+    .nav-btn {
+      padding: 12px 6px;
+      border: 1px solid var(--bordure);
+      border-radius: 9px;
+      background: white;
+      color: var(--texte);
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .nav-btn.actif {
+      color: white;
+      background: var(--bleu);
+      border-color: var(--bleu);
+    }
+
+    .nav-btn:hover {
+      border-color: var(--bleu);
+    }
+
+    .etape {
+      display: none;
+      padding: clamp(18px, 4vw, 32px);
+      background: white;
+      border: 1px solid var(--bordure);
+      border-radius: 14px;
+      box-shadow: 0 4px 15px #172b4d0a;
+    }
+
+    .etape.active {
+      display: block;
+    }
+
+    .surtitre {
+      margin: 0 0 6px;
+      color: var(--bleu);
+      font-size: 0.85rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    h2 {
+      margin-top: 0;
+      line-height: 1.3;
+    }
+
+    h3 {
+      line-height: 1.4;
+    }
+
+    .encadre {
+      margin: 18px 0;
+      padding: 15px 18px;
+      border-left: 4px solid var(--bleu);
+      border-radius: 5px;
+      background: var(--bleu-clair);
+    }
+
+    .question {
+      margin: 24px 0;
+      padding: 18px;
+      border: 1px solid var(--bordure);
+      border-radius: 10px;
+    }
+
+    .question h3 {
+      margin-top: 0;
+    }
+
+    .proposition {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      margin: 10px 0;
+      padding: 10px 12px;
+      border: 1px solid var(--bordure);
+      border-radius: 7px;
+      cursor: pointer;
+    }
+
+    .proposition:hover {
+      background: #f7faff;
+    }
+
+    .proposition input {
+      margin-top: 6px;
+      accent-color: var(--bleu);
+    }
+
+    .proposition.correcte {
+      border-color: var(--vert);
+      background: var(--vert-clair);
+    }
+
+    .proposition.incorrecte {
+      border-color: #c24141;
+      background: #fff0f0;
+    }
+
+    .boutons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 12px 18px;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      background: var(--bleu);
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      filter: brightness(1.1);
+    }
+
+    .btn-secondaire {
+      color: var(--bleu);
+      background: var(--bleu-clair);
+    }
+
+    .feedback {
+      margin-top: 15px;
+      padding: 14px;
+      border-radius: 8px;
+      background: var(--gris);
+    }
+
+    .feedback:empty {
+      display: none;
+    }
+
+    .resultat {
+      margin-top: 20px;
+      padding: 18px;
+      border-radius: 10px;
+      background: var(--bleu-clair);
+    }
+
+    .cache {
+      display: none !important;
+    }
+
+    .exemple-corrige {
+      margin: 22px 0;
+      padding: 18px;
+      border: 1px solid var(--bordure);
+      border-radius: 10px;
+      background: white;
+    }
+
+    .exemple-corrige h3 {
+      margin-top: 0;
+      color: var(--bleu);
+    }
+
+    .paragraphe {
+      font-size: 1.04rem;
+      line-height: 1.95;
+    }
+
+    .contexte {
+      color: #1769aa !important;
+      font-weight: 600;
+    }
+
+    .exemple {
+      color: #218347 !important;
+      font-weight: 600;
+    }
+
+    .analyse {
+      color: #b45309 !important;
+      font-weight: 600;
+    }
+
+    .legende {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 22px;
+      padding: 16px;
+      margin: 20px 0;
+      border-radius: 10px;
+      background: var(--gris);
+    }
+
+    .legende-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pastille {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+      border-radius: 50%;
+    }
+
+    .pastille.contexte {
+      background: #1769aa;
+    }
+
+    .pastille.exemple {
+      background: #218347;
+    }
+
+    .pastille.analyse {
+      background: #b45309;
+    }
+
+    .schema {
+      margin-top: 28px;
+      padding: 20px;
+      border-radius: 12px;
+      background: #f8fafc;
+    }
+
+    .schema-ligne {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 14px;
+      border-radius: 8px;
+    }
+
+    .contexte-fond {
+      color: #1769aa;
+      background: #eaf3fc;
+    }
+
+    .exemple-fond {
+      color: #218347;
+      background: #eaf7ef;
+    }
+
+    .analyse-fond {
+      color: #b45309;
+      background: #fff3e3;
+    }
+
+    .fleche {
+      padding: 5px;
+      color: #64748b;
+      font-size: 1.4rem;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .schema-formule {
+      margin-top: 18px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .bilan-question {
+      padding: 15px;
+      margin: 15px 0;
+      border: 1px solid var(--bordure);
+      border-radius: 8px;
+    }
+
+    .bilan-question label {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      cursor: pointer;
+    }
+
+    .bilan-question input {
+      margin-top: 6px;
+      accent-color: var(--bleu);
+    }
+
+    .progression {
+      height: 7px;
+      margin: 15px 0 25px;
+      overflow: hidden;
+      border-radius: 10px;
+      background: #e2e8f0;
+    }
+
+    .progression div {
+      width: 25%;
+      height: 100%;
+      background: var(--vert);
+      transition: width 0.2s;
+    }
+
+    footer {
+      padding: 20px;
+      color: #64748b;
+      font-size: 0.9rem;
+      text-align: center;
+    }
+
+    @media (max-width: 600px) {
+      .navigation {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .nav-btn {
+        min-height: 60px;
+      }
+
+      .etape {
+        padding: 17px;
+      }
+
+      .legende {
+        flex-direction: column;
+      }
+
+      .exemple-corrige {
+        padding: 14px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>Chronologie et construction des frontières</h1>
+  <p>Fiche QCM 1 — Réviser, comprendre et argumenter</p>
+  <p>4 questions · Environ 6 minutes pour le QCM</p>
+</header>
+
+<div class="conteneur">
+
+  <nav class="navigation" aria-label="Navigation entre les étapes">
+    <button class="nav-btn actif" data-etape="1">
+      1. Je réponds
+    </button>
+    <button class="nav-btn" data-etape="2">
+      2. Je comprends
+    </button>
+    <button class="nav-btn" data-etape="3">
+      3. J'argumente
+    </button>
+    <button class="nav-btn" data-etape="4">
+      4. Je révise
+    </button>
+  </nav>
+
+  <div class="progression" aria-label="Progression">
+    <div id="barreProgression"></div>
+  </div>
+
+  <main>
+
+    <section class="etape active" id="etape1">
+      <p class="surtitre">Première étape · Mémorisation</p>
+      <h2>Je réponds sans consulter mon cours</h2>
+
+      <p>
+        Répondez aux quatre questions de mémoire, sans ouvrir votre cours
+        ni chercher les réponses. Le but est de repérer ce que vous savez
+        déjà et ce que vous devez encore consolider.
+      </p>
+
+      <div class="encadre">
+        <strong>Consigne :</strong> sélectionnez une seule réponse
+        par question. Lorsque vous avez terminé, cliquez sur
+        « Vérifier mes réponses ».
+      </div>
+
+      <form id="formulaireQCM">
+
+        <div class="question">
+          <h3>Question 1. Quel enchaînement explique le mieux la multiplication des frontières depuis le milieu du XXe siècle ?</h3>
+
+          <label class="proposition">
+            <input type="radio" name="q1" value="A">
+            <span>A. Mondialisation, disparition des États, création de nouvelles frontières.</span>
+          </label>
+
+          <label class="proposition">
+            <input type="radio" name="q1" value="B">
+            <span>B. Décolonisation, dissolution de l'URSS et de la Yougoslavie, apparition de nouveaux États.</span>
+          </label>
+
+          <label class="proposition">
+            <input type="radio" name="q1" value="C">
+            <span>C. Création de l'ONU, disparition des souverainetés nationales, suppression des frontières.</span>
+          </label>
+
+          <label class="proposition">
+            <input type="radio" name="q1" value="D">
+            <span>D. Développement du libre-échange, remplacement des États par des régions économiques.</span>
+          </label>
+        </div>
+
+        <div class="question">
+          <h3>Question 2. Quelle affirmation concernant la conférence de Berlin de 1884-1885 est exacte ?</h3>
+
+          <label class="proposition">
+            <input type="radio" name="q2" value="A">
+            <span>A. Elle trace définitivement toutes les frontières actuelles de l'Afrique.</span>
+          </label>
+
+          <label class="proposition">
+            <input type="radio" name="q2" value="B">
+            <span>B. Elle organise le partage de l'Afrique en créant immédiatement tous les États africains actuels.</span>
+          </label>
+
+          <label class="proposition">
+            <input type="radio" name="q2" value="C">
+            <span>C. Elle fixe des règles pour les revendications territoriales européennes et contribue à accélérer la colonisation.</span>
+          </label>
+
+          <label class="proposition">
+            <input type="radio" name="q2" value="D">
+            <span>D. Elle proclame l'indépendance des territoires africains colonisés.</span>
+          </label>
+        </div>
+
+        <div class="question">
+          <h3>Question 3. Pourquoi l'indépendance du Soudan du Sud en 2011 constitue-t-elle un exemple important pour étudier les frontières ?</h3>
+
+          <label class="proposition">
+            <input type="radio" name="q3" value="A">
+            <span>A. Elle illustre la suppression d'une frontière héritée de la colonisation sans création d'un nouvel État.</span>
+          </label>
+
+          <label class="proposition">
+            <input type="radio" name="q3" value="B">
+            <span>B. Elle illustre la création d'un nouvel État et d'une nouvelle frontière internationale, dont le tracé et les modalités de contrôle peuvent être sources de tensions.</span>
+          </label>
+
+          <label class="proposition">
+            <input type="radio" name="q3" value="C">
+            <span>C. Elle montre que l'indépendance suffit à résoudre les conflits portant sur les ressources.</span>
+          </label>
+
+          <label class="proposition">
+            <input type="radio" name="q3" value="D">
+            <span>D. Elle montre que les frontières africaines ont toutes été redessinées après 2011.</span>
+          </label>
+        </div>
+
+        <div class="question">
+          <h3>Question 4. Quelle proposition permet de distinguer correctement le traité de Tordesillas de la conférence de Berlin ?</h3>
+
+          <label class="proposition">
+            <input type="radio" name="q4" value="A">
+            <span>A. Les deux accords ont créé des organisations internationales chargées d'abolir les frontières.</span>
+          </label>
+
+          <label class="proposition">
+            <input type="radio" name="q4" value="B">
+            <span>B. Tordesillas organise un partage de revendications territoriales entre l'Espagne et le Portugal en 1494 ; Berlin fixe, en 1884-1885, des règles concernant les revendications et les prises de possession européennes en Afrique.</span>
+          </label>
+
+          <label class="proposition">
+            <input type="radio" name="q4" value="C">
+            <span>C. Tordesillas partage l'Afrique, tandis que Berlin partage les Amériques entre les États-Unis et le Mexique.</span>
+          </label>
+
+          <label class="proposition">
+            <input type="radio" name="q4" value="D">
+            <span>D. Tordesillas et Berlin sont deux accords signés après la décolonisation.</span>
+          </label>
+        </div>
+
+        <button class="btn" type="submit">
+          Vérifier mes réponses
+        </button>
+
+      </form>
+
+      <div id="resultatQCM" class="resultat cache" aria-live="polite"></div>
+
+      <div class="boutons">
+        <button class="btn btn-secondaire" onclick="allerEtape(2)">
+          Passer à la correction
+        </button>
+      </div>
+    </section>
+
+    <section class="etape" id="etape2">
+      <p class="surtitre">Deuxième étape · Compréhension</p>
+      <h2>Je découvre la correction et les explications</h2>
+
+      <p>
+        Prends le temps de lire les explications, y compris lorsque
+        tu as trouvé la bonne réponse. L'objectif est de comprendre
+        le raisonnement historique, et pas seulement de mémoriser
+        une lettre.
+      </p>
+
+      <article class="exemple-corrige">
+        <h3>Question 1 — Réponse B</h3>
+        <p>
+          La décolonisation, puis la fin de la guerre froide, entraînent
+          l'apparition de nombreux États souverains. La dissolution
+          de l'URSS en 1991 et l'éclatement de la Yougoslavie modifient
+          profondément la carte politique de l'Europe et de l'Asie.
+        </p>
+        <p><strong>À retenir :</strong> décolonisation, nouveaux États, dissolution de l'URSS, éclatement de la Yougoslavie.</p>
+      </article>
+
+      <article class="exemple-corrige">
+        <h3>Question 2 — Réponse C</h3>
+        <p>
+          La conférence de Berlin de 1884-1885 organise les rapports
+          entre puissances coloniales et fixe des règles concernant
+          leurs revendications territoriales en Afrique. Elle contribue
+          à accélérer la colonisation, mais ne trace pas à elle seule
+          toutes les frontières africaines actuelles. De nombreuses
+          délimitations sont réalisées ultérieurement.
+        </p>
+        <p><strong>À retenir :</strong> puissances européennes, revendications territoriales, colonisation, limites de la conférence.</p>
+      </article>
+
+      <article class="exemple-corrige">
+        <h3>Question 3 — Réponse B</h3>
+        <p>
+          Le Soudan du Sud devient indépendant en 2011, après un
+          référendum d'autodétermination. Cette indépendance entraîne
+          la création d'un nouvel État et d'une nouvelle frontière
+          internationale. Les désaccords territoriaux, les ressources
+          pétrolières et les conflits compliquent ensuite les relations
+          entre les deux États.
+        </p>
+        <p><strong>À retenir :</strong> indépendance en 2011, nouvel État, frontière internationale, tensions territoriales et pétrolières.</p>
+      </article>
+
+      <article class="exemple-corrige">
+        <h3>Question 4 — Réponse B</h3>
+        <p>
+          Le traité de Tordesillas, signé en 1494, organise un partage
+          de revendications territoriales entre l'Espagne et le Portugal.
+          La conférence de Berlin, en 1884-1885, concerne les règles
+          de revendication et de prise de possession des territoires
+          africains par les puissances européennes. Ces deux accords
+          illustrent des formes d'appropriation territoriale décidées
+          par des puissances, sans que les populations concernées
+          soient les principales décisionnaires.
+        </p>
+        <p><strong>À retenir :</strong> Tordesillas, 1494, Espagne et Portugal ; Berlin, 1884-1885, colonisation de l'Afrique.</p>
+      </article>
+
+      <div class="encadre">
+        <strong>Le réflexe à acquérir :</strong> associe chaque événement
+        à une date, à des acteurs et à une conséquence sur les territoires
+        ou les frontières.
+      </div>
+
+<div class="diagram">
+    <div class="node" style="background:var(--bluebg);color:var(--blue)">
+	<p class="schema-formule">   
+<strong>CONSTRUCTION DES FRONTIÈRES</strong><br>
+      États · Territoires · Rapports de force
+    </div>
+<div class="arrow"><p class="schema-formule">↓</div>
+    <div class="branches">
+     <div class="node">
+	<p class="schema-formule">
+        <strong style="color:var(--orange)">Traités territoriaux</strong><br>
+        Tordesillas (1494) · Espagne · Portugal
+      </div>
+      <div class="node">
+        <p class="schema-formule">
+        <strong style="color:var(--orange)">Partages coloniaux</strong><br>
+        Berlin (1884-1885) · Rivalités · Appropriation territoriale
+      </div>
+      <div class="node">
+        <p class="schema-formule">
+	<strong style="color:var(--orange)">Décolonisation</strong><br>
+        Indépendances · Nouveaux États · Frontières héritées
+      </div>
+      <div class="node">
+       <p class="schema-formule">
+	<strong style="color:var(--orange)">Éclatement d'États</strong><br>
+        URSS (1991) · Yougoslavie · Nouvelles frontières
+      </div>
+    </div>
+    <p class="schema-formule">
+    <div class="arrow"><p class="schema-formule">↓</div>
+    <div class="node" style="background:var(--orangebg);color:var(--orange)">
+      <p class="schema-formule">
+      <strong>DES TENSIONS POSSIBLES</strong><br>
+      Désaccords territoriaux · Ressources · Contrôle des frontières
+    </div>
+    <div class="node">
+      <strong>Exemple à retenir : le Soudan du Sud</strong><br>
+      2011 → indépendance → nouvel État → nouvelle frontière
+      internationale → tensions territoriales et pétrolières.
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Je vérifie ma mémoire</h3>
+    <p>Remets mentalement cette chaîne dans l'ordre :</p>
+    <p><strong>
+      Indépendance · Tensions possibles · Nouvelle frontière · Nouvel État
+    </strong></p>
+    <details>
+      <summary>Afficher la chaîne logique</summary>
+      <p>
+        Indépendance → nouvel État → nouvelle frontière internationale
+        → tensions possibles.
+      </p>
+    </details>
+  </div>
+  <div class="actions">
+    <button class="primary" data-go="2">Passer à la rédaction</button>
+  </div>
+</section>
+
+      <div class="boutons">
+        <button class="btn" onclick="allerEtape(3)">
+          Passer à la réponse argumentée
+        </button>
+      </div>
+    </section>
+
+    
+<section class="etape" id="etape3">
+  <p class="surtitre">Troisième étape · Réinvestissement</p>
+  <h2>Je mobilise mes connaissances dans une réponse argumentée</h2>
+
+  <p>
+    Tu vas maintenant réutiliser les connaissances du QCM pour
+    répondre à une question historique et géographique.
+    Commence par rédiger ta réponse sans regarder les exemples corrigés.
+  </p>
+
+  <h3>À toi de rédiger avant de regarder les corrigés</h3>
+
+  <p>
+    <strong>Sujet :</strong> Pourquoi la construction des frontières
+    est-elle un processus historique qui peut être source de tensions ?
+  </p>
+
+  <p>
+    Tu peux choisir un exemple parmi ceux étudiés dans le QCM :
+    le traité de Tordesillas, la conférence de Berlin, la décolonisation
+    ou l'indépendance du Soudan du Sud.
+  </p>
+
+  <label for="reponseEleve">
+    <strong>Ma réponse argumentée</strong>
+  </label>
+
+  <textarea
+    id="reponseEleve"
+    rows="7"
+    placeholder="Rédige ici ton paragraphe. Présente une idée, utilise un exemple précis, puis explique ce qu'il démontre."
+  ></textarea>
+
+  <div class="encadre">
+    <h3>Un guide pour construire ta réponse</h3>
+
+    <p>
+      Ce guide t'aide à organiser ton raisonnement. Il ne remplace
+      pas tes connaissances historiques.
+    </p>
+
+    <div class="schema-ligne contexte-fond">
+      <strong>1. L'IDÉE</strong>
+      Je présente le phénomène et réponds au sujet.
+    </div>
+
+    <div class="schema-ligne exemple-fond">
+      <strong>2. L'EXEMPLE</strong>
+      Je cite un événement, une date ou un territoire précis.
+    </div>
+
+    <div class="schema-ligne analyse-fond">
+      <strong>3. L'EXPLICATION</strong>
+      J'explique comment cet exemple démontre mon idée et répond
+      à la question posée.
+    </div>
+
+    <p class="schema-formule">
+      IDÉE → EXEMPLE PRÉCIS → EXPLICATION
+    </p>
+  </div>
+
+  <h3>Je vérifie ma réponse</h3>
+
+  <p>
+    Avant de consulter les modèles, vérifie les points suivants.
+    Tu pourras ensuite comparer ton paragraphe aux exemples corrigés.
+  </p>
+
+  <div class="bilan-question">
+    <label>
+      <input type="checkbox" id="verifIdee">
+      J'ai formulé une idée qui répond directement au sujet.
+    </label>
+  </div>
+
+  <div class="bilan-question">
+    <label>
+      <input type="checkbox" id="verifExemple">
+      J'ai cité un exemple historique précis, avec une date ou un lieu.
+    </label>
+  </div>
+
+  <div class="bilan-question">
+    <label>
+      <input type="checkbox" id="verifExplication">
+      J'ai expliqué ce que mon exemple démontre.
+    </label>
+  </div>
+
+  <div class="bilan-question">
+    <label>
+      <input type="checkbox" id="verifSujet">
+      J'ai montré en quoi mon exemple répond à la question posée.
+    </label>
+  </div>
+
+
+  <div id="conseilRedaction" class="feedback cache"
+       aria-live="polite"></div>
+
+  <h3>Je compare ma réponse aux exemples corrigés</h3>
+
+  <p>
+    Vous pouvez maintenant consulter les trois modèles. Les couleurs
+    mettent en évidence la fonction de chaque portion du paragraphe.
+    Comparez-les à votre propre réponse : vous n'avez pas besoin d'avoir
+    utilisé exactement les mêmes mots, mais vous devez retrouver
+    les mêmes éléments de raisonnement.
+  </p>
+
+  <div class="legende">
+    <span class="legende-item">
+      <span class="pastille contexte"></span>
+      <strong>Idée ou contexte</strong>
+    </span>
+
+    <span class="legende-item">
+      <span class="pastille exemple"></span>
+      <strong>Exemple précis</strong>
+    </span>
+
+    <span class="legende-item">
+      <span class="pastille analyse"></span>
+      <strong>Explication et réponse au sujet</strong>
+    </span>
+  </div>
+
+  <article class="exemple-corrige">
+    <h3>Exemple corrigé 1 — La décolonisation</h3>
+
+    <p>
+      <strong>Sujet :</strong> Montrez que la décolonisation a contribué
+      à multiplier les frontières internationales.
+    </p>
+
+    <p class="paragraphe">
+      <span class="contexte">
+        Au milieu du XXe siècle, la décolonisation entraîne
+        l'indépendance de nombreux territoires et transforme
+        la carte politique du monde.
+      </span>
+      <span class="exemple">
+        Par exemple, de nombreux États africains accèdent à
+        l'indépendance dans les années 1960.
+      </span>
+      <span class="analyse">
+        Ces indépendances font apparaître de nouveaux États souverains
+        et transforment des limites coloniales en frontières
+        internationales, ce qui explique la multiplication des frontières.
+      </span>
+    </p>
+
+    <p class="autocorrection">
+      <strong>Pour vérifier votre réponse :</strong> avez-vous expliqué
+      le rôle de la décolonisation ? Avez-vous cité un exemple précis ?
+      Avez-vous montré le lien entre les indépendances et la multiplication
+      des frontières ?
+    </p>
+  </article>
+
+  <article class="exemple-corrige">
+    <h3>Exemple corrigé 2 — La conférence de Berlin</h3>
+
+    <p>
+      <strong>Sujet :</strong> Expliquez le rôle des puissances
+      européennes dans la construction des frontières africaines.
+    </p>
+
+    <p class="paragraphe">
+      <span class="contexte">
+        À la fin du XIXe siècle, les puissances européennes cherchent
+        à étendre leur domination sur le continent africain.
+      </span>
+      <span class="exemple">
+        La conférence de Berlin de 1884-1885 établit notamment des règles
+        concernant les revendications territoriales européennes en Afrique.
+      </span>
+      <span class="analyse">
+        Elle contribue à accélérer la colonisation, mais ne trace pas
+        à elle seule toutes les frontières africaines actuelles :
+        celles-ci résultent aussi de délimitations ultérieures.
+      </span>
+    </p>
+
+    <p class="autocorrection">
+      <strong>Pour vérifier votre réponse :</strong> Avez-vous replacé
+      la conférence dans son contexte ? Avez-vous donné les dates exactes ?
+      Avez-vous évité d'affirmer qu'elle a dessiné toutes les frontières
+      actuelles de l'Afrique ?
+    </p>
+  </article>
+
+  <article class="exemple-corrige">
+    <h3>Exemple corrigé 3 — Le Soudan du Sud</h3>
+
+    <p>
+      <strong>Sujet :</strong> Montrez que la création d'un nouvel État
+      peut entraîner des tensions frontalières.
+    </p>
+
+    <p class="paragraphe">
+      <span class="contexte">
+        La création d'un nouvel État modifie les frontières
+        internationales et ne règle pas nécessairement les désaccords
+        territoriaux.
+      </span>
+      <span class="exemple">
+        Le Soudan du Sud devient indépendant en 2011, après un référendum
+        d'autodétermination.
+      </span>
+      <span class="analyse">
+        Les désaccords concernant certains territoires, le tracé de la
+        frontière et les ressources pétrolières montrent que l'indépendance
+        ne suffit pas à résoudre toutes les tensions entre États.
+      </span>
+    </p>
+
+    <p class="autocorrection">
+      <strong>Pour vérifier votre réponse :</strong> Avez-vous cité l'année 2011 ?
+      Avez-vous identifié la création d'un nouvel État ? Avez-vous expliqué
+      pourquoi des tensions peuvent persister après l'indépendance ?
+    </p>
+  </article>
+
+  <div class="encadre">
+    <h3>Mon bilan final</h3>
+
+    <p>
+      Une bonne réponse argumentée ne se limite pas à citer un événement.
+      Elle explique pourquoi cet événement permet de répondre au sujet.
+    </p>
+
+    <p>
+      Si vous avez oublié une date, un exemple ou une explication, reprenez
+      le schéma de synthèse et complétez votre réponse. Puis, dans quelques
+      jours, essayez de rédiger un nouveau paragraphe sans regarder
+      les modèles.
+    </p>
+  </div>
+
+  <div class="boutons">
+    <button type="button" class="btn btn-secondaire"
+            onclick="allerEtape(2)">
+      Revoir les corrections du QCM
+    </button>
+
+    <button type="button" class="btn" onclick="allerEtape(4)">
+      Passer à la révision différée
+    </button>
+  </div>
+</section>
+
+
+    <section class="etape" id="etape4">
+      <p class="surtitre">Quatrième étape · Mémorisation durable</p>
+      <h2>Je reprends les questions difficiles</h2>
+
+      <p>
+        Pour vérifier que vos connaissances sont durablement acquises,
+        il est conseillé d'attendre quelques jours avant de refaire
+        les questions qui vous ont posé problème. Ce délai permet de tester
+        ce que vous avez réellement mémorisé, plutôt que ce dont vous vous
+        souvenez encore immédiatement après la correction.
+      </p>
+
+      <div class="encadre">
+        <strong>Conseil :</strong> revenez idéalement dans trois à cinq
+        jours, sans consulter votre cours ni les corrections. Vous restez
+        libre de refaire le QCM plus tôt si vous le souhaitez.
+        Aucun délai n'est imposé.
+      </div>
+
+      <h3>Je sélectionne les questions à retravailler</h3>
+
+      <p>
+        Cochez les questions auxquelles vous avez répondu incorrectement
+        ou celles pour lesquelles vous hésitiez.
+      </p>
+
+      <div class="bilan-question">
+        <label>
+          <input type="checkbox" class="question-a-revoir" value="q1">
+          <span><strong>Question 1.</strong> Décolonisation et multiplication des frontières.</span>
+        </label>
+      </div>
+
+      <div class="bilan-question">
+        <label>
+          <input type="checkbox" class="question-a-revoir" value="q2">
+          <span><strong>Question 2.</strong> Conférence de Berlin et colonisation de l'Afrique.</span>
+        </label>
+      </div>
+
+      <div class="bilan-question">
+        <label>
+          <input type="checkbox" class="question-a-revoir" value="q3">
+          <span><strong>Question 3.</strong> Indépendance du Soudan du Sud et tensions frontalières.</span>
+        </label>
+      </div>
+
+      <div class="bilan-question">
+        <label>
+          <input type="checkbox" class="question-a-revoir" value="q4">
+          <span><strong>Question 4.</strong> Traité de Tordesillas et conférence de Berlin.</span>
+        </label>
+      </div>
+
+      <div class="boutons">
+        <button class="btn" onclick="preparerRevision()">
+          Préparer ma prochaine révision
+        </button>
+
+        <button class="btn btn-secondaire" onclick="recommencerQCM()">
+          Refaire le QCM maintenant
+        </button>
+      </div>
+
+      <div id="bilanRevision" class="feedback cache" aria-live="polite"></div>
+
+      <div class="encadre">
+        <strong>Dernier conseil :</strong> lorsque tu reprendras une
+        question, essaie d'expliquer pourquoi la bonne réponse est juste
+        et pourquoi les autres propositions sont incorrectes. Puis
+        réutilise un exemple dans une phrase argumentée.
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<footer>
+  Fiche QCM 1 — Chronologie et construction des frontières
+</footer>
+
+<script>
+  // Navigation entre les quatre étapes
+  function allerEtape(numero) {
+    document.querySelectorAll(".etape").forEach(function(section) {
+      section.classList.remove("active");
+    });
+
+    document.querySelectorAll(".nav-btn").forEach(function(bouton) {
+      bouton.classList.remove("actif");
+    });
+
+    document.getElementById("etape" + numero).classList.add("active");
+
+    document.querySelector(
+      '.nav-btn[data-etape="' + numero + '"]'
+    ).classList.add("actif");
+
+    document.getElementById("barreProgression").style.width =
+      (numero * 25) + "%";
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  document.querySelectorAll(".nav-btn").forEach(function(bouton) {
+    bouton.addEventListener("click", function() {
+      allerEtape(Number(bouton.dataset.etape));
+    });
+  });
+
+  // Correction du QCM
+  const bonnesReponses = {
+    q1: "B",
+    q2: "C",
+    q3: "B",
+    q4: "B"
+  };
+
+  let questionsEchouees = [];
+
+  document.getElementById("formulaireQCM").addEventListener(
+    "submit",
+    function(evenement) {
+      evenement.preventDefault();
+
+      let score = 0;
+      questionsEchouees = [];
+
+      Object.keys(bonnesReponses).forEach(function(question) {
+        const choix = document.querySelector(
+          'input[name="' + question + '"]:checked'
+        );
+
+        const propositions = document.querySelectorAll(
+          'input[name="' + question + '"]'
+        );
+
+        propositions.forEach(function(input) {
+          const ligne = input.closest(".proposition");
+
+          ligne.classList.remove("correcte", "incorrecte");
+
+          if (input.value === bonnesReponses[question]) {
+            ligne.classList.add("correcte");
+          }
+        });
+
+        if (choix && choix.value === bonnesReponses[question]) {
+          score++;
+        } else {
+          questionsEchouees.push(question);
+
+          if (choix) {
+            choix.closest(".proposition").classList.add("incorrecte");
+          }
+        }
+      });
+
+      const resultat = document.getElementById("resultatQCM");
+
+      resultat.classList.remove("cache");
+
+      let message = "";
+
+      if (score === 4) {
+        message = "Excellent ! Les quatre réponses sont justes.";
+      } else if (score >= 2) {
+        message = "Bon début ! Relis les explications des questions à retravailler.";
+      } else {
+        message = "Reprends les corrections tranquillement, puis essaie de nouveau.";
+      }
+
+      resultat.innerHTML =
+        "<h3>Ton résultat : " + score + "/4</h3>" +
+        "<p>" + message + "</p>" +
+        "<p>Les bonnes réponses sont indiquées en vert. " +
+        "Les réponses incorrectes sélectionnées apparaissent en rouge.</p>" +
+        "<button type='button' class='btn' onclick='allerEtape(2)'>" +
+        "Lire les corrections expliquées</button>";
+
+      // Préparer automatiquement la sélection de révision
+      document.querySelectorAll(".question-a-revoir").forEach(function(caseACocher) {
+        caseACocher.checked = questionsEchouees.includes(caseACocher.value);
+      });
+
+      // Mémoriser le résultat uniquement pendant la visite de la page
+      document.getElementById("bilanRevision").classList.add("cache");
+    }
+  );
+
+  // Aide à la rédaction : vérification indicative, pas notation automatique
+function afficherConseil() {
+  const texte = document.getElementById("reponseEleve").value.trim();
+  const conseil = document.getElementById("conseilRedaction");
+
+  conseil.classList.remove("cache");
+
+  if (texte.length < 30) {
+    conseil.innerHTML =
+      "<strong>Réponse à compléter.</strong><p>" +
+      "Rédige un paragraphe suffisamment développé avant de faire ton bilan.</p>";
+    return;
+  }
+
+  const criteres = [
+    ["verifIdee", "une idée qui répond au sujet"],
+    ["verifExemple", "un exemple historique précis"],
+    ["verifExplication", "une explication de l'exemple"],
+    ["verifSujet", "un lien explicite avec la question"]
+  ];
+
+  const valides = criteres.filter(function(critere) {
+    return document.getElementById(critere[0]).checked;
+  });
+
+  const manquants = criteres.filter(function(critere) {
+    return !document.getElementById(critere[0]).checked;
+  });
+
+  if (manquants.length === 0) {
+    conseil.innerHTML =
+      "<strong>Tu estimes avoir mobilisé les quatre éléments.</strong><p>" +
+      "Compare maintenant ton paragraphe aux trois modèles colorés. " +
+      "Vérifie surtout que ton exemple prouve réellement ton idée.</p>";
+  } else {
+    conseil.innerHTML =
+      "<strong>Quelques points sont encore à vérifier.</strong><p>" +
+      "Relis ta réponse en portant attention aux éléments suivants : " +
+      manquants.map(function(critere) {
+        return critere[1];
+      }).join(", ") +
+      ".</p><p>Cette vérification repose sur ton autoévaluation : " +
+      "elle ne constitue pas une correction automatique de ton texte.</p>";
+  }
+}
+
+
+  // Préparation de la prochaine séance
+  function preparerRevision() {
+    const selection = Array.from(
+      document.querySelectorAll(".question-a-revoir:checked")
+    );
+
+    const bilan = document.getElementById("bilanRevision");
+    bilan.classList.remove("cache");
+
+    if (selection.length === 0) {
+      bilan.innerHTML =
+        "<strong>Aucune question sélectionnée.</strong><p>" +
+        "Tu peux refaire tout le QCM plus tard, ou sélectionner les " +
+        "questions que tu souhaites retravailler.</p>";
+      return;
+    }
+
+    const descriptions = {
+      q1: "Question 1 — Décolonisation et multiplication des frontières",
+      q2: "Question 2 — Conférence de Berlin",
+      q3: "Question 3 — Indépendance du Soudan du Sud",
+      q4: "Question 4 — Tordesillas et Berlin"
+    };
+
+    const liste = selection.map(function(caseACocher) {
+      return "<li>" + descriptions[caseACocher.value] + "</li>";
+    }).join("");
+
+    bilan.innerHTML =
+      "<strong>Ta liste de révision est prête.</strong>" +
+      "<p>Conseil : reviens dans trois à cinq jours pour tester ta mémoire.</p>" +
+      "<ul>" + liste + "</ul>" +
+      "<p>Tu peux conserver cette liste en la copiant ou en la notant " +
+      "dans ton agenda. Elle ne sera pas sauvegardée automatiquement " +
+      "si tu fermes ou actualises cette page.</p>";
+  }
+
+  // Refaire le QCM immédiatement
+  function recommencerQCM() {
+    document.getElementById("formulaireQCM").reset();
+
+    document.querySelectorAll(".proposition").forEach(function(ligne) {
+      ligne.classList.remove("correcte", "incorrecte");
+    });
+
+    document.getElementById("resultatQCM").classList.add("cache");
+    document.getElementById("bilanRevision").classList.add("cache");
+
+    questionsEchouees = [];
+
+    allerEtape(1);
+  }
+</script>
+
+</body>
+</html>
